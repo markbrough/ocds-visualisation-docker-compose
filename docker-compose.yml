@@ -1,0 +1,66 @@
+---
+version: '2.3'
+
+services:
+
+  #nginx:
+  #  image: nginx:stable
+  #  ports:
+  #  - '0.0.0.0:80:80'
+  #  - '0.0.0.0:443:443'
+  #  environment:
+  #  - "TZ=Asia/Tbilisi"
+  #  volumes:
+  #  - ${CONF}/nginx/nginx_main.conf:/etc/nginx.conf:Z
+  #  - ${CONF}/nginx/nginx_app.conf:/etc/nginx/conf.d/default.conf:Z
+  #  - ${CONF}/nginx/nginx_ssl.conf:/etc/nginx/conf.d/ssl.conf:z
+  #  - ${CONF}/nginx/cors_allowed:/etc/nginx/cors_allowed:Z
+  #  - ${CONF}/nginx/proxy_headers:/etc/nginx/proxy_headers:Z
+  #  depends_on: ['api_frontend']
+  #  restart: unless-stopped
+
+  postgres:
+    image: postgres:latest
+    container_name: postgres_main
+    environment:
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+    volumes:
+      - postgres_main:/var/lib/postgresql/data:Z
+    ports:
+      - "127.0.0.1:5431:5432"
+    restart: unless-stopped
+
+  redis:
+    image: redis
+    container_name: redis_main
+    ports:
+      - "127.0.0.1:6378:6379"
+    restart: unless-stopped
+
+  visualisation_backend:
+    env_file:
+      - visualisation_backend.env
+    image: visualisation_backend
+    ports: ['127.0.0.1:5050:5050']
+    environment:
+    - "TZ=Asia/Tbilisi"
+    command: server
+    depends_on: ['postgres']
+    restart: unless-stopped
+
+  visualisation_backend_celery:
+    env_file:
+      - visualisation_backend.env
+    image: visualisation_backend
+    environment:
+    - "TZ=Asia/Tbilisi"
+    command: celery
+    depends_on: ['postgres', 'visualisation_backend']
+    restart: unless-stopped
+
+
+volumes:
+  postgres_main:
+  frontend_data:

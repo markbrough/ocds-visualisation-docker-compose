@@ -1,0 +1,13 @@
+---
+version: '2.3'
+
+services:
+
+  visualisation_frontend:
+    image: visualisation_frontend
+    ports: ['127.0.0.1:8888:3000']
+    environment:
+    - "TZ=Asia/Tbilisi"
+    ports:
+      - "127.0.0.1:8888:8888"
+    restart: unless-stopped
