@@ -1,0 +1,3 @@
+[submodule "ocds-visualisation-frontend"]
+	path = ocds-visualisation-frontend
+	url = git@github.com:markbrough/ocds-visualisation-frontend.git
