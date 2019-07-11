@@ -155,10 +155,12 @@ docker-compose run visualisation_backend update
 
 ## Set up the front end
 
-The front end needs to be built locally so that you can specify required variables before building the container.
+The front end needs to be built locally so that you can specify required variables before building the container, as well as build the container on the basis of the complete set of existing data.
 
 ```sh
-cd visualisation_frontend
+cd ocds-visualisation-frontend
+git submodule init
+git submodule update
 export VISUALISATION_BACKEND_API_URL=http://127.0.0.1:5050
 ./build.sh
 docker build --tag=visualisation_frontend .
